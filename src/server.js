@@ -9,6 +9,7 @@ const xss = require('xss-clean');
 const hpp = require('hpp');
 const rateLimit = require('express-rate-limit');
 const socket = require('socket.io');
+const apiRoutes = require('./routes');
 require('./db');
 
 const app = express();
@@ -16,7 +17,7 @@ app.server = http.createServer(app);
 const io = socket(app.server);
 
 app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
+app.use(express.json({ limit: process.env.BODY_LIMIT }));
 app.use(cors());
 app.use(cookieParser());
 app.use(mongoSanitize());
@@ -29,6 +30,8 @@ const limiter = rateLimit({
 });
 
 app.use(limiter);
+
+app.use('/api/v1', apiRoutes);
 
 const PORT = process.env.PORT;
 app.server.listen(PORT, () => {

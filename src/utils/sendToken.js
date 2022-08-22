@@ -1,4 +1,4 @@
-const sendToken = (user, statusCode, res) => {
+const sendToken = (user, res, statusCode = 200) => {
     const token = user.getJWT();
     const options = {
         expires: new Date(Date.now() + process.env.TOKEN_EXPIRES * 24 *60 * 60 * 1000),
